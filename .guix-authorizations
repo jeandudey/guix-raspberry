@@ -6,7 +6,7 @@
 ;;;
 ;;; Usage:
 ;;;
-;;; guix git authenticate a36da6fc3be358428458468e3559bfa382c9db5d '9D54 3ADF 6E90 348C C606  90A9 6279 AEC2 0A95 24EC'
+;;; guix git authenticate 70a1525f4a82e61411f5fd54918e1b56ed61ca58 '9D54 3ADF 6E90 348C C606  90A9 6279 AEC2 0A95 24EC'
 
 (authorizations
  (version 0)
