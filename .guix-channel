@@ -1,0 +1,9 @@
+;;; SPDX-FileCopyrightText: © 2024 Jean-Pierre De Jesus DIAZ <me@jeandudey.tech>
+;;; SPDX-License-Identifier: GPL-3.0-or-later
+
+(channel
+ (version 0)
+ (url "https://github.com/jeandudey/guix-raspberry")
+ (news-file "news.txt"))
+
+;; vim: filetype=scheme
