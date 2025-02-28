@@ -63,11 +63,11 @@
 ;; just to replace it with another to avoid any issues altogether.
 ;;
 ;; Better be safe than sorry.
-(define-public edk2-rpi4-osi
+(define-public edk2-rpi-osi
   (let ((revision "0")
         (commit "ea2040c2d4e2200557e87b9f9fbd4f8fb7a2b6e8"))
     (package
-      (name "edk2-rpi4-osi")
+      (name "edk2-rpi-osi")
       (version (git-version "0.0.0" revision commit))
       (source (origin
                 (method git-fetch)
@@ -108,19 +108,35 @@
                          (in-dxe-dir (string-append (assoc-ref %build-inputs "source")
                                                     "/" dxe-dir))
                          (out-dxe-dir (string-append #$output
-                                                     "/src/edk2-rpi4-osi/"
+                                                     "/src/edk2-rpi-osi/"
                                                      dxe-dir)))
                     (mkdir-p out-dxe-dir)
                     (copy-recursively in-dxe-dir out-dxe-dir)
 
                     (mkdir-p (string-append
-                               #$output "/src/edk2-rpi4-osi/Platform"
+                               #$output "/src/edk2-rpi-osi/Platform"
+                               "/RaspberryPi/RPi3/TrustedFirmware"))
+                    (mkdir-p (string-append
+                               #$output "/src/edk2-rpi-osi/Platform"
                                "/RaspberryPi/RPi4/TrustedFirmware"))
+
+                    (copy-file #$(file-append
+                                   (this-package-input "arm-trusted-firmware-rpi3")
+                                   "/bl31.bin")
+                               (string-append
+                                 #$output "/src/edk2-rpi-osi/Platform"
+                                 "/RaspberryPi/RPi3/TrustedFirmware/bl31.bin"))
+                    (copy-file #$(file-append
+                                   (this-package-input "arm-trusted-firmware-rpi3")
+                                   "/fip.bin")
+                               (string-append
+                                 #$output "/src/edk2-rpi-osi/Platform"
+                                 "/RaspberryPi/RPi3/TrustedFirmware/fip.bin"))
                     (copy-file #$(file-append
                                    (this-package-input "arm-trusted-firmware-rpi4")
                                    "/bl31.bin")
                                (string-append
-                                 #$output "/src/edk2-rpi4-osi/Platform"
+                                 #$output "/src/edk2-rpi-osi/Platform"
                                  "/RaspberryPi/RPi4/TrustedFirmware/bl31.bin"))
 
                     ;; Convert SVG to PNG.
@@ -139,7 +155,8 @@
                             (string-append out-dxe-dir "/Logo.png")
                             (string-append "BMP3:" out-dxe-dir "/Logo.bmp"))))))
       (native-inputs (list imagemagick inkscape))
-      (inputs (list arm-trusted-firmware-rpi4))
+      (inputs (list arm-trusted-firmware-rpi3
+                    arm-trusted-firmware-rpi4))
       (home-page "https://github.com/tianocore/edk2-non-osi")
       (synopsis "Logo driver sources for Raspberry Pi 4 EDK2")
       (description "This package provides modified sources for displaying a
@@ -199,8 +216,8 @@ so that it is safe for usage and redistribution.")
                           (string-append
                             cwd ":"
                             #$(this-package-native-input "edk2-platforms") ":"
-                            #$(this-package-native-input "edk2-rpi4-osi")
-                            "/src/edk2-rpi4-osi"))
+                            #$(this-package-native-input "edk2-rpi-osi")
+                            "/src/edk2-rpi-osi"))
                   (invoke "bash" "edksetup.sh")
                   (substitute* "Conf/target.txt"
                     (("^TARGET[ ]*=.*$") "TARGET = RELEASE\n")
@@ -274,7 +291,7 @@ device_tree_end=0x200000~%"))))))))
                (sha256
                 (base32
                  "1z1kdl6lsfrj151pnhqrfzs8xfwcgysyfq23kc5d93cc0vr2znm0")))))
-         ("edk2-rpi4-osi" ,edk2-rpi4-osi)
+         ("edk2-rpi-osi" ,edk2-rpi-osi)
          ,@(if (not (string-prefix? "aarch64" (%current-system)))
                `(("cross-gcc" ,(cross-gcc "aarch64-linux-gnu"))
                  ("cross-binutils" ,(cross-binutils "aarch64-linux-gnu")))
