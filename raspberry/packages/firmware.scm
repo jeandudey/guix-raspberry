@@ -158,9 +158,9 @@
       (inputs (list arm-trusted-firmware-rpi3
                     arm-trusted-firmware-rpi4))
       (home-page "https://github.com/tianocore/edk2-non-osi")
-      (synopsis "Logo driver sources for Raspberry Pi 4 EDK2")
+      (synopsis "Logo driver sources for Raspberry Pi EDK2")
       (description "This package provides modified sources for displaying a
-logo in the Raspberry Pi 4 EDK2 UEFI firmware.  It is based on the non-OSI
+logo in the Raspberry Pi EDK2 UEFI firmware.  It is based on the non-OSI
 sources of EDK2 but removing all of the binary blobs and trademarked logos
 so that it is safe for usage and redistribution.")
       (license license:bsd-2))))
