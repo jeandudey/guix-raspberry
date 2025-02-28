@@ -12,6 +12,7 @@
   #:use-module (gnu packages linux)
   #:use-module (gnu packages perl)
   #:use-module (gnu packages python)
+  #:use-module (gnu packages tls)
   #:use-module (guix build-system trivial)
   #:use-module (guix gexp)
   #:use-module (guix git-download)
@@ -21,6 +22,22 @@
 
 (define make-arm-trusted-firmware
   (@@ (gnu packages firmware) make-arm-trusted-firmware))
+
+(define-public arm-trusted-firmware-rpi3
+  (let ((base (make-arm-trusted-firmware "rpi3")))
+    (package
+      (inherit base)
+      (arguments
+       (substitute-keyword-arguments (package-arguments base)
+         ((#:make-flags make-flags)
+          #~(append (list "RPI3_PRELOADED_DTB_BASE=0x10000"
+                          "PRELOADED_BL33_BASE=0x30000"
+                          "SUPPORT_VFP=1"
+                          "RPI3_USE_UEFI_MAP=1")
+                    #$make-flags))))
+      (native-inputs
+        (modify-inputs (package-native-inputs base)
+          (append openssl))))))
 
 (define-public arm-trusted-firmware-rpi4
   (let ((base (make-arm-trusted-firmware "rpi4")))
@@ -34,7 +51,6 @@
                           "SUPPORT_VFP=1"
                           "SMC_PCI_SUPPORT=1")
                     #$make-flags)))))))
-
 
 ;; The EDK2 source package necessary to build the image.
 ;;
